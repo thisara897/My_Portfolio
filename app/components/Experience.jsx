@@ -7,14 +7,14 @@ export default function Experience(){
     const canvasRef = useRef(null);
 
     useEffect(()=>{
-                const scene = new THREE.Scene();
+        const scene = new THREE.Scene();
 
-                const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 100);
-                scene.add(camera)
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 100);
+        scene.add(camera)
 
-                const renderer = new THREE.WebGLRenderer({
-                    canvas: canvasRef.current,
-            });
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvasRef.current,
+    });
         }, []);
 
 
