@@ -7,13 +7,22 @@ export default function Experience(){
     const canvasRef = useRef(null);
 
     useEffect(()=>{
-        const scene = new THREE.Scene();
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color(0x111111);
+
+                //Creating a group
+                const group = new THREE.Group();
+                scene.add(group);
 
                 const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 100);
                 scene.add(camera)
                 camera.position.z = 3
 
-                //Object
+                /**
+                 * Objects
+                 */
+
+                //object-01 
                 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
                 const material = new THREE.MeshBasicMaterial({
@@ -22,16 +31,36 @@ export default function Experience(){
 
                 const mesh = new THREE.Mesh(geometry, material);
 
-                scene.add(mesh);
+                group.add(mesh);
+
+                //object-02
+                const mesh2 = new THREE.Mesh(geometry, material)
+                group.add(mesh2)
+                mesh2.position.x = 2
+                mesh2.position.y = 1
 
                 const renderer = new THREE.WebGLRenderer({
                     canvas: canvasRef.current,
             });
             renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.render(scene, camera)
-            //Clock
 
+            //Background resize
+            function handleResize(){
+                camera.aspect = window.innerWidth/window.innerHeight;
+                camera.updateProjectionMatrix();
+
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                //renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            }
+            window.addEventListener('resize', handleResize);
+
+
+            //Clock
             const clock = new THREE.Clock();
+
+            let requestAnimationFrameId;
 
             function tick(){
                 const deltaTime = clock.getDelta();
@@ -39,14 +68,19 @@ export default function Experience(){
 
                 mesh.position.y = Math.sin(elapsedTime)
 
-                mesh.rotation.y += deltaTime * 0.5;
+                group.rotation.y += deltaTime * 0.5;
 
                 renderer.render(scene, camera);
 
-                window.requestAnimationFrame(tick)
+                requestAnimationFrameId = window.requestAnimationFrame(tick)
             }
 
             tick();
+
+            return ()=>{
+                window.cancelAnimationFrame(requestAnimationFrameId);
+                window.removeEventListener('resize', handleResize);
+            }
 
 
         }, []);
