@@ -67,8 +67,11 @@ export default function Experience(){
                 const elapsedTime = clock.getElapsedTime();
 
                 mesh.position.y = Math.sin(elapsedTime)
+                //group.position.x = Math.sin(elapsedTime)
+                mesh2.rotation.y += deltaTime * 0.5;
 
                 group.rotation.y += deltaTime * 0.5;
+                
 
                 renderer.render(scene, camera);
 
