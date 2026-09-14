@@ -14,9 +14,27 @@ export default function Experience(){
                 const group = new THREE.Group();
                 scene.add(group);
 
+                //Camera
                 const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 100);
                 scene.add(camera)
-                camera.position.z = 3
+                //camera.position.z = 3
+                camera.position.set(0, 2, 5);
+
+                /**
+                 * Lights
+                 */
+                //Ambient Light
+                const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+                scene.add(ambientLight);
+
+                //Directional Light
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
+                scene.add(directionalLight);
+                directionalLight.position.set(-2, 2, 2);
+                directionalLight.castShadow = true;
+
+                const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
+                scene.add(directionalLightHelper);
 
                 /**
                  * Objects
@@ -25,23 +43,37 @@ export default function Experience(){
                 //object-01 
                 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-                const material = new THREE.MeshBasicMaterial({
+                const material = new THREE.MeshStandardMaterial({
                     color: 0xff0000
                 })
 
                 const mesh = new THREE.Mesh(geometry, material);
-
+                mesh.castShadow = true;
                 group.add(mesh);
 
                 //object-02
                 const mesh2 = new THREE.Mesh(geometry, material)
+                mesh2.castShadow = true;
                 group.add(mesh2)
                 mesh2.position.x = 2
                 mesh2.position.y = 1
 
+                //Floor
+
+                const floorGeometry = new THREE.PlaneGeometry(10, 10);
+                const floorMaterial = new THREE.MeshStandardMaterial({
+                    color : 0x808080
+                });
+                const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                floor.receiveShadow = true;
+                scene.add(floor);
+                floor.rotation.x = -Math.PI * 0.5
+                floor.position.y = -1;
+
                 const renderer = new THREE.WebGLRenderer({
                     canvas: canvasRef.current,
             });
+            renderer.shadowMap.enabled = true;
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.render(scene, camera)
